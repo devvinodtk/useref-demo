@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { useRef } from "react";
+import Circle from "./Circle";
+import useThrottle from "./useThrottle";
+
 
 function App() {
+  const handleMouseMove = (e) => {
+    const circle = circleRef.current;
+    circle.style.left =`${e[0].clientX+10}px `;
+    circle.style.top =`${e[0].clientY+10}px`;
+  }
+
+  const handleThrottledMouseMove = useThrottle(handleMouseMove, 100);
+
+  const circleRef = useRef()
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div onMouseMove={handleThrottledMouseMove} style={{
+        height:"100vh", 
+        width:"100%", 
+        position: "relative"
+      }}>
+      <Circle ref={circleRef} />
     </div>
   );
 }
